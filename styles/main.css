@@ -69,6 +69,9 @@ nav {
   text-decoration: none;
   transition: all 0.3s ease;
   cursor: pointer;
+  display: inline-block;
+  font-size: 1.1rem;
+  line-height: 1.5;
 }
 
 .cta-button:hover {
@@ -110,16 +113,22 @@ nav {
   flex-wrap: wrap;
 }
 
+.button-primary,
+.button-secondary {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
 .button-primary {
   background: white;
   color: #1e40af;
-  padding: 1rem 2rem;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-size: 1.1rem;
 }
 
 .button-primary:hover {
@@ -130,13 +139,7 @@ nav {
 .button-secondary {
   background: transparent;
   color: white;
-  padding: 1rem 2rem;
   border: 2px solid white;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-size: 1.1rem;
 }
 
 .button-secondary:hover {
@@ -324,6 +327,7 @@ nav {
   transition: all 0.3s ease !important;
   text-decoration: none !important;
   display: inline-block !important;
+  line-height: 1.5 !important;
 }
 
 #hero-purchase-button button:hover,
