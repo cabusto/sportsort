@@ -4,11 +4,14 @@ export default async function handler(req, res) {
   }
 
   const bearerToken = req.headers.authorization?.split(' ')[1];
-const validBearer = bearerToken === process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
-const receivedSecret = req.headers['x-supertab-secret'];
+  const validBearer = bearerToken === process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+  const receivedSecret = req.headers['x-supertab-secret'];
+  const receivedBypassSecret = req.headers['x-vercel-protection-bypass'];
+  
 const validSecret = receivedSecret === process.env.SUPERTAB_WEBHOOK_SECRET;
+  const validBypass = receivedBypassSecret === process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
-if (!validBearer && !validSecret) {
+if (!validBypass && !validSecret) {
   return res.status(403).send('Unauthorized');
 }
 
