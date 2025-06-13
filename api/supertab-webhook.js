@@ -3,13 +3,14 @@ export default async function handler(req, res) {
     return res.status(405).send('Method Not Allowed');
   }
 
-  // 1. Validate Supertab webhook secret
-  const expectedSecret = process.env.SUPERTAB_WEBHOOK_SECRET;
-  const receivedSecret = req.headers['x-supertab-secret'];
+  const bearerToken = req.headers.authorization?.split(' ')[1];
+const validBearer = bearerToken === process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+const receivedSecret = req.headers['x-supertab-secret'];
+const validSecret = receivedSecret === process.env.SUPERTAB_WEBHOOK_SECRET;
 
-  if (receivedSecret !== expectedSecret) {
-    return res.status(403).send('Unauthorized: Invalid Secret');
-  }
+if (!validBearer && !validSecret) {
+  return res.status(403).send('Unauthorized');
+}
 
   const { email, offering_id } = req.body;
 
@@ -22,12 +23,12 @@ export default async function handler(req, res) {
     const unkeyRes = await fetch('https://api.unkey.dev/v1/keys', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.UNKEY_API_KEY}`,
+        'Authorization': `Bearer ${process.env.UNKEY_ROOT_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         name: `${email}-${offering_id}`,
-        environmentId: process.env.UNKEY_ENV_ID,
+        environmentId: process.env.UNKEY_API_ID,
         expires: null,
         meta: { email, offering_id },
       }),
