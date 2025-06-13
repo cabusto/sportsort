@@ -3,6 +3,14 @@ export default async function handler(req, res) {
     return res.status(405).send('Method Not Allowed');
   }
 
+  // 1. Validate Supertab webhook secret
+  const expectedSecret = process.env.SUPERTAB_WEBHOOK_SECRET;
+  const receivedSecret = req.headers['x-supertab-secret'];
+
+  if (receivedSecret !== expectedSecret) {
+    return res.status(403).send('Unauthorized: Invalid Secret');
+  }
+
   const { email, offering_id } = req.body;
 
   if (!email || !offering_id) {
@@ -10,7 +18,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Create Unkey API key
+    // 2. Create Unkey API key
     const unkeyRes = await fetch('https://api.unkey.dev/v1/keys', {
       method: 'POST',
       headers: {
@@ -33,7 +41,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to create API key' });
     }
 
-    // Email the key to the user using Resend
+    // 3. Send email with key
     const emailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -44,14 +52,13 @@ export default async function handler(req, res) {
         from: 'noreply@sportsort.com',
         to: email,
         subject: 'Your Sportsort API Key',
-        html: `<p>Hi there! Thanks for your purchase.</p><p>Here is your API key:</p><pre>${key}</pre><p>If you have any questions, just reply to this email.</p>`
+        html: `<p>Hi there! Thanks for your purchase.</p><p>Here is your API key:</p><pre>${key}</pre><p>If you have any questions, just reply to this email.</p>`,
       }),
     });
 
-    const emailResult = await emailRes.json();
-
     if (!emailRes.ok) {
-      console.error('Email send error:', emailResult);
+      const emailErr = await emailRes.json();
+      console.error('Email send error:', emailErr);
       return res.status(500).json({ error: 'Failed to send API key via email' });
     }
 
