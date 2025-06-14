@@ -25,7 +25,7 @@ if (!validBypass && !validSecret) {
   }
 
   try {
-    // 2. Create Unkey API key
+    // 2. Create Unkey API key    
     const unkeyRes = await fetch('https://api.unkey.dev/v1/keys', {
       method: 'POST',
       headers: {
@@ -34,7 +34,7 @@ if (!validBypass && !validSecret) {
       },
       body: JSON.stringify({
         name: `${email}-${offering_id}`,
-        environmentId: process.env.UNKEY_API_ID,
+        apiId: ${process.env.UNKEY_API_ID,
         expires: null,
         meta: { email, offering_id },
       }),
