@@ -15,7 +15,10 @@ if (!validBypass && !validSecret) {
   return res.status(403).send('Unauthorized');
 }
 
-  const { email, offering_id } = req.body;
+  // Parse Supertab payload
+  const { data } = req.body;
+  const { user, offering_id } = data || {};
+  const email = user?.email;
 
   if (!email || !offering_id) {
     return res.status(400).json({ error: 'Missing email or offering_id' });
