@@ -28,10 +28,10 @@ if (!validBypass && !validSecret) {
   try {
     // 2. Create Unkey API key
     const requestBody = JSON.stringify({
-      name: `${email}-${offering_id}`,
+      //name: `${email}-${offering_id}`,
       apiId: `${process.env.UNKEY_API_ID}`,
       expires: unixMillis,
-      meta: { email, offering_id },
+      //meta: { email, offering_id },
     });
     console.log("Request body:", requestBody);
 
