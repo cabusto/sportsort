@@ -19,7 +19,7 @@ if (!validBypass && !validSecret) {
   const { data } = req.body;
   const { user, offering_id, entitlement_status } = data || {};
   const email = user?.email;
-  const unixMillis = new Date(entitlement_status.expires).getTime();
+  const unixMillis = entitlement_status?.expires ? new Date(entitlement_status.expires).getTime() : null;
 
   if (!email || !offering_id) {
     return res.status(400).json({ error: 'Missing email or offering_id' });
