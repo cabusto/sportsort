@@ -40,7 +40,7 @@ if (!validBypass && !validSecret) {
       },
       body: JSON.stringify({
         name: `${email}-${offering_id}`,
-        apiId: ${process.env.UNKEY_API_ID,
+        apiId: process.env.UNKEY_API_ID,
         // Convert to Unix timestamp in milliseconds
         expires: new Date(isoTimestampExpiry).getTime(),
         meta: { email, offering_id },
