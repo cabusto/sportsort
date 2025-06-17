@@ -27,42 +27,24 @@ if (!validBypass && !validSecret) {
 
   try {
     // 2. Create Unkey API key
-    // const requestBody = JSON.stringify({
-    //   name: `${email}-${offering_id}`,
-    //   apiId: process.env.UNKEY_API_ID,
-    //   expires: unixMillis,
-    //   meta: { email, offering_id },
-    // });
-    // console.log("Request body:", requestBody);
+    const requestBody = JSON.stringify({
+      name: `${email}-${offering_id}`,
+      apiId: `${process.env.UNKEY_API_ID}`,
+      expires: unixMillis,
+      meta: { email, offering_id },
+    });
+    console.log("Request body:", requestBody);
 
-    const options = {
+    const unkeyRes = await fetch('https://api.unkey.dev/v1/keys', {
       method: 'POST',
-      headers: {Authorization: 'Bearer ${process.env.UNKEY_ROOT_KEY}', 'Content-Type': 'application/json'},
-      body: '{
-        "apiId":"${process.env.UNKEY_API_ID}",
-        "name":`${email}-${offering_id}`,
-        "meta":{
-          email, offering_id,
-        },
-        "expires":unixMillis,
-      }'
-    };
-    console.log("Request body options:", options);
-    const unkeyData = fetch('https://api.unkey.dev/v1/keys.createKey', options)
-      .then(response => response.json())
-      .then(response => console.log(response))
-      .catch(err => console.error(err));
-    
-    // const unkeyRes = await fetch('https://api.unkey.dev/v1/keys', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${process.env.UNKEY_ROOT_KEY}`,
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: requestBody,
-    // });
+      headers: {
+        'Authorization': `Bearer ${process.env.UNKEY_ROOT_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    });
 
-    //const unkeyData = await unkeyRes.json();
+    const unkeyData = await unkeyRes.json();
     const key = unkeyData?.key;
 
     if (!key) {
