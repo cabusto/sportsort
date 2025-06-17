@@ -30,7 +30,7 @@ if (!validBypass && !validSecret) {
     const requestBody = JSON.stringify({
       name: `${email}-${offering_id}`,
       apiId: process.env.UNKEY_API_ID,
-      expires: new Date(isoTimestampExpiry).getTime(),
+      expires: unixMillis,
       meta: { email, offering_id },
     });
     console.log("Request body:", requestBody);
