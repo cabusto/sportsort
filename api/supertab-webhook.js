@@ -38,7 +38,7 @@ if (!validBypass && !validSecret) {
     const unkeyRes = await fetch('https://api.unkey.dev/v1/keys', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.UNKEY_ROOT_KEY}`,
+        'Authorization': `Bearer ${process.env.UNKEY_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: requestBody,
