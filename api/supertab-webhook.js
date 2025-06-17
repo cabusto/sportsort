@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   const receivedSecret = req.headers['x-supertab-secret'];
   const receivedBypassSecret = req.headers['x-vercel-protection-bypass'];
   
-const validSecret = receivedSecret === process.env.SUPERTAB_WEBHOOK_SECRET;
+  const validSecret = receivedSecret === process.env.SUPERTAB_WEBHOOK_SECRET;
   const validBypass = receivedBypassSecret === process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
 if (!validBypass && !validSecret) {
@@ -31,7 +31,15 @@ if (!validBypass && !validSecret) {
   console.log(unixMillis);
 
   try {
-    // 2. Create Unkey API key    
+    // 2. Create Unkey API key
+    const requestBody = JSON.stringify({
+      name: `${email}-${offering_id}`,
+      apiId: process.env.UNKEY_API_ID,
+      expires,
+      meta: { email, offering_id },
+    });
+    console.log("Request body:", requestBody);
+    
     const unkeyRes = await fetch('https://api.unkey.dev/v1/keys', {
       method: 'POST',
       headers: {
