@@ -46,13 +46,7 @@ if (!validBypass && !validSecret) {
         'Authorization': `Bearer ${process.env.UNKEY_ROOT_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        name: `${email}-${offering_id}`,
-        apiId: `${process.env.UNKEY_API_ID}`,
-        // Convert to Unix timestamp in milliseconds
-        expires: new Date(isoTimestampExpiry).getTime(),
-        meta: { email, offering_id },
-      }),
+      body: requestBody,
     });
 
     const unkeyData = await unkeyRes.json();
