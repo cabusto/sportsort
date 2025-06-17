@@ -25,7 +25,7 @@ if (!validBypass && !validSecret) {
     return res.status(400).json({ error: 'Missing email or offering_id' });
   }
 
-  const isoTimestampExpiry = entitlement_status.expires; //'2025-05-15T12:25:04.074314Z';
+  const isoTimestampExpiry = entitlement_status.expires;
   // Convert to Unix timestamp in milliseconds
   const unixMillis = new Date(isoTimestampExpiry).getTime();
   console.log(unixMillis);
@@ -40,7 +40,7 @@ if (!validBypass && !validSecret) {
       },
       body: JSON.stringify({
         name: `${email}-${offering_id}`,
-        apiId: process.env.UNKEY_API_ID,
+        apiId: `${process.env.UNKEY_API_ID}`,
         // Convert to Unix timestamp in milliseconds
         expires: new Date(isoTimestampExpiry).getTime(),
         meta: { email, offering_id },
