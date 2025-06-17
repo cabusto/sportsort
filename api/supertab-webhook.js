@@ -19,16 +19,11 @@ if (!validBypass && !validSecret) {
   const { data } = req.body;
   const { user, offering_id, entitlement_status } = data || {};
   const email = user?.email;
+  const unixMillis = new Date(entitlement_status.expires).getTime();
 
-  console.log(data);
   if (!email || !offering_id) {
     return res.status(400).json({ error: 'Missing email or offering_id' });
   }
-
-  const isoTimestampExpiry = entitlement_status.expires;
-  // Convert to Unix timestamp in milliseconds
-  const unixMillis = new Date(isoTimestampExpiry).getTime();
-  console.log(unixMillis);
 
   try {
     // 2. Create Unkey API key
