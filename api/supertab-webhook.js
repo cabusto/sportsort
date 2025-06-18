@@ -52,7 +52,9 @@ if (!validBypass && !validSecret) {
       return res.status(500).json({ error: 'Failed to create API key' });
     }
 
-    // 3. Send email with key (using delivered@resend.dev to test
+    // 3. Send email with key (using delivered@resend.dev to test)
+    const fromEmail = process.env.NODE_ENV === 'production' ? process.env.FROM_EMAIL_ADDRESS : 'Acme <onboarding@resend.dev>';
+    const toEmail = process.env.NODE_ENV === 'production' ? email : 'delivered@resend.dev';
     const emailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -60,8 +62,8 @@ if (!validBypass && !validSecret) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Justin <justinkwarren@gmail.com>',
-        to: ['${email}'],
+        from: fromEmail,
+        to: toEmail,
         subject: 'Your Sportsort API Key',
         html: `<p>Hi there! Thanks for your purchase.</p><p>Here is your API key:</p><pre>${key}</pre><p>If you have any questions, just reply to this email.</p>`,
       }),
