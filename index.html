@@ -369,6 +369,35 @@
     -->
 
     <!-- Placeholder for Hero Purchase Button -->
+  
+    
+  <script type="module">
+    import { Supertab } from "https://js.supertab.co/v3/supertab.js";
+
+    // Initialize Supertab client
+    const supertabClient = new Supertab({ clientId: "test_client.a60409ae-3a7e-462a-9eb0-4bb63d6166de" });
+
+    // Create the purchase button
+     const { initialState, show } = await supertabClient.createPurchaseButton({
+        experienceId: "experience.d83466e0-1cf9-423b-981d-e49d496b6d2d",
+        containerElement: document.getElementById("hero-purchase-button"),
+        onDone: ({ priorEntitlement, purchase }) => {
+          if (priorEntitlement) {
+            // Insert your code to handle when user has prior entitlement
+            console.log("User has prior entitlement", priorEntitlement);
+          } else if (purchase && purchase.status === "completed") {
+            // Insert your code to handle when user purchases an offering
+            console.log("Purchase completed!", purchase);
+            handlePurchaseSuccess(purchase);
+          } else {
+            // Insert your code to handle when user abandons the flow without purchase or prior entitlement
+            console.log("Purchase canceled!");
+          }
+        }
+      });
+  </script>
+  
+  
     <script>
         // Temporary placeholder - replace with actual Supertab snippet
         document.getElementById('hero-purchase-button').innerHTML = 
