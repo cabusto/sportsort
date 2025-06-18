@@ -60,8 +60,8 @@ if (!validBypass && !validSecret) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Acme <onboarding@resend.dev>',
-        to: ['delivered@resend.dev'],
+        from: 'Justin <justinkwarren@gmail.com>',
+        to: ['${email}'],
         subject: 'Your Sportsort API Key',
         html: `<p>Hi there! Thanks for your purchase.</p><p>Here is your API key:</p><pre>${key}</pre><p>If you have any questions, just reply to this email.</p>`,
       }),
