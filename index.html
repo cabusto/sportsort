@@ -347,67 +347,67 @@
         });
     </script>
 
-    <!-- Supertab Integration -->
-    <!-- 
-    TODO: Replace these placeholder divs with actual Supertab Purchase Button snippets
-    
-    To set up Supertab:
-    1. Create an account at https://business.supertab.co/
-    2. Create a Site for sportsort.com
-    3. Create Offerings for your API plans (e.g. "NBA API Access", "All Sports Bundle")
-    4. Create Purchase Button experiences for each offering
-    5. Replace the placeholder divs below with the actual Supertab snippets
-    
-    Example Supertab snippet structure:
-    <script src="https://js.supertab.co/v1/supertab.js"></script>
-    <div id="supertab-button-[EXPERIENCE_ID]"></div>
-    <script>
-        Supertab.render('[EXPERIENCE_ID]', {
-            target: '#supertab-button-[EXPERIENCE_ID]'
-        });
-    </script>
-    -->
+    <!-- Your existing page markup (hero, features, pricing, etc.) is unchanged -->
+  <!-- Make sure these three containers exist in the HTML above: -->
+  <!-- <div id="hero-purchase-button"></div> -->
+  <!-- <div id="pricing-purchase-button"></div> -->
+  <!-- <div id="cta-purchase-button"></div> -->
 
-    <!-- Placeholder for Hero Purchase Button -->
-  
-    
+  <!-- Supertab Paygate on‑click integration -->
   <script type="module">
     import { Supertab } from "https://js.supertab.co/v3/supertab.js";
 
-    // Initialize Supertab client
-    const supertabClient = new Supertab({ clientId: "test_client.a60409ae-3a7e-462a-9eb0-4bb63d6166de" });
+    // 1️⃣  Initialise Supertab client (‣ use TEST client id)
+    const supertabClient = new Supertab({
+      clientId: "test_client.a60409ae-3a7e-462a-9eb0-4bb63d6166de"
+    });
 
-    // Create the purchase button
-     const { initialState, show } = await supertabClient.createPurchaseButton({
-        experienceId: "experience.d83466e0-1cf9-423b-981d-e49d496b6d2d",
-        containerElement: document.getElementById("hero-purchase-button"),
-        onDone: ({ priorEntitlement, purchase }) => {
-          if (priorEntitlement) {
-            // Insert your code to handle when user has prior entitlement
-            console.log("User has prior entitlement", priorEntitlement);
-          } else if (purchase && purchase.status === "completed") {
-            // Insert your code to handle when user purchases an offering
-            console.log("Purchase completed!", purchase);
-            handlePurchaseSuccess(purchase);
-          } else {
-            // Insert your code to handle when user abandons the flow without purchase or prior entitlement
-            console.log("Purchase canceled!");
-          }
+    // 2️⃣  Prepare the paygate once (it returns `show` that we can reuse)
+    const { initialState, show } = await supertabClient.createPaygate({
+      experienceId: "experience.3078665b-f23c-4268-954a-0ea056afb1db"
+    });
+
+    // 3️⃣  If visitor already owns an entitlement, you can skip gating logic
+    if (initialState.priorEntitlement) {
+      console.log("User already entitled", initialState.priorEntitlement);
+      // TODO: maybe hide all CTA buttons or redirect to dashboard here.
+    } else {
+      // 4️⃣  Attach click‑handlers to CTA containers
+      const ctaIds = [
+        "hero-purchase-button",
+        "pricing-purchase-button",
+        "cta-purchase-button"
+      ];
+
+      for (const id of ctaIds) {
+        const container = document.getElementById(id);
+        if (!container) continue;
+
+        // If the container is empty, inject a visible button so users can click
+        if (container.childElementCount === 0) {
+          const btn = document.createElement("button");
+          btn.className = "button-primary";
+          btn.textContent = "Start Free Trial";
+          container.appendChild(btn);
         }
-      });
+
+        // Add click listener (delegated to the container for simplicity)
+        container.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          const { priorEntitlement, purchase } = await show();
+
+          if (priorEntitlement) {
+            console.log("User has prior entitlement", priorEntitlement);
+          } else if (purchase?.status === "completed") {
+            console.log("Purchase completed!", purchase);
+            // 🎉  TODO: maybe redirect to docs or surface success UI here.
+          } else {
+            console.log("Purchase canceled");
+          }
+        });
+      }
+    }
   </script>
-  
-  
-    <script>
-        // Temporary placeholder - replace with actual Supertab snippet
-        document.getElementById('hero-purchase-button').innerHTML = 
-            '<button onclick="alert(\'Please set up Supertab integration - see HTML comments\')" class="button-primary">Start Free Trial</button>';
-        
-        document.getElementById('pricing-purchase-button').innerHTML = 
-            '<button onclick="alert(\'Please set up Supertab integration - see HTML comments\')" class="button-primary">View Pricing Details</button>';
-            
-        document.getElementById('cta-purchase-button').innerHTML = 
-            '<button onclick="alert(\'Please set up Supertab integration - see HTML comments\')" class="button-primary">Start Free Trial</button>';
-    </script>
 </body>
 </html>
